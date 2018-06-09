@@ -58,4 +58,4 @@ main = do
     n    <- readLn @Int
     emps <- replicateM n readLn
     let aveBonus = runFold theFold emps
-    printf "%.2f\n" aveBonus
+    printf "%.2f\n" (fromIntegral @Int @Double (round (aveBonus * 100 + 0.5)) / 100)
