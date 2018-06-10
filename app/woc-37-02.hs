@@ -35,8 +35,10 @@ main :: IO ()
 main = do
     n        <- readLn @Int
     commands <- replicateM n getLine
-    let res = flip foldMap commands $ Dual          -- ^ it's reverse
-                                    . maxing
-                                    . runCommand
+    let res = flip foldMap commands $ Dual          -- monoid transformer
+                                    . maxing        -- monoid transformer
+                                    . runCommand    -- turn into a monoid
                                     . parseCommand
     print $ appEndo (getDual res) 0
+                    -- ^ need Dual because Endo's default <> is backwards
+                    -- Dual is a newtype wrapper that reverses <>
