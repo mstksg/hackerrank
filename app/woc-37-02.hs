@@ -11,14 +11,19 @@ import           Data.List
 import           Data.Monoid
 import           Text.Printf
 
+-- | Not a monoid
 data Command = CSet Int
              | CAdd Int
 
-runCommand :: Command -> Endo Int
+-- | Turn it into a monoid
+runCommand
+    :: Command
+    -> Endo Int
 runCommand = \case
-    CSet y -> Endo $ const y
-    CAdd y -> Endo $ (+ y)
+    CSet y -> Endo (const y)
+    CAdd y -> Endo (+ y)
 
+-- | Monoid transformer
 maxing :: Endo Int -> Endo Int
 maxing (Endo f) = Endo $ \x -> max x (f x)
 
@@ -30,5 +35,7 @@ main :: IO ()
 main = do
     n        <- readLn @Int
     commands <- replicateM n getLine
-    let res = foldMap (maxing . runCommand . parseCommand) commands
+    let res = flip foldMap commands $ maxing
+                                    . runCommand
+                                    . parseCommand
     print $ appEndo res 0
