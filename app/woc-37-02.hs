@@ -15,13 +15,13 @@ data Command = CSet Int
              | CAdd Int
 
 theFold :: Int -> Command -> Int
-theFold n = \case
+theFold n = fmap (max n) $ \case
     CSet y -> y
     CAdd y -> n + y
 
 parseCommand  :: String -> Command
-parseCommand (words->"add":(read->y):_) = CAdd y
-parseCommand (words->"set":(read->y):_) = CSet y
+parseCommand (words->("add":(read->y):_)) = CAdd y
+parseCommand (words->("set":(read->y):_)) = CSet y
 
 main :: IO ()
 main = do
