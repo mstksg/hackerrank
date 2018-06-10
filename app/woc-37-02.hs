@@ -35,7 +35,8 @@ main :: IO ()
 main = do
     n        <- readLn @Int
     commands <- replicateM n getLine
-    let res = flip foldMap commands $ maxing
+    let res = flip foldMap commands $ Dual          -- ^ it's reverse
+                                    . maxing
                                     . runCommand
                                     . parseCommand
-    print $ appEndo res 0
+    print $ appEndo (getDual res) 0
