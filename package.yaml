@@ -38,6 +38,19 @@ executables:
     - foldl
     - profunctors
 
+executables:
+  hackerrank-woc-37-02:
+    main:                woc-37-02.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - hackerrank
+    - foldl
+    - profunctors
+
 tests:
   hackerrank-test:
     main:                Spec.hs
