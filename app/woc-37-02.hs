@@ -14,10 +14,13 @@ import           Text.Printf
 data Command = CSet Int
              | CAdd Int
 
-theFold :: Int -> Command -> Int
-theFold n = fmap (max n) $ \case
-    CSet y -> y
-    CAdd y -> n + y
+runCommand :: Command -> Endo Int
+runCommand = \case
+    CSet y -> Endo $ const y
+    CAdd y -> Endo $ (+ y)
+
+maxing :: Endo Int -> Endo Int
+maxing (Endo f) = Endo $ \x -> max x (f x)
 
 parseCommand  :: String -> Command
 parseCommand (words->("add":(read->y):_)) = CAdd y
@@ -27,7 +30,5 @@ main :: IO ()
 main = do
     n        <- readLn @Int
     commands <- replicateM n getLine
-    let history = scanl theFold 0
-                . map parseCommand
-                $ commands
-    print $ maximum history
+    let res = foldMap (maxing . runCommand . parseCommand) commands
+    print $ appEndo res 0
